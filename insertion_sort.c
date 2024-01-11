@@ -91,7 +91,6 @@ void merge_sort(int A[], int l, int r){
     if ((r - l) > 1){
 
         int m = floor( ( (l + r) / 2) );
-        //printf("%d \n", m);
 
         merge_sort(A, l, m);
         merge_sort(A, m, r);
