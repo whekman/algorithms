@@ -57,5 +57,14 @@ int main(void){
 
 	printf("\n");
 
+	int j = strcmp("def","abc");
+
+	printf("%d", j);
+
+	printf("\n");
+
+	printf("%d",(int) sizeof(table));
+
+
 	return 0;
 }
