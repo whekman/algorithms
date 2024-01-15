@@ -61,15 +61,30 @@ void table_insert(int table[], int m, char *key, int value){
 
 	printf("s = %s, h = %d, i = %d \n", key, h, i);
 
-	table[i] = value; 
+	if (table[i] == 0){
+
+		table[i] = value;
+	} else {
+		printf("error: collision - already containts value for hash(key).\n");
+	} 
+
+}
+
+int table_search(int table[], int m, char *key){
+
+	unsigned int h = hash_KR2(key);
+
+	int i = divhash(h, m);
+
+	return table[i];
 
 }
 
 
 int main(void){
 
-	// number of slots
-	int m = 12;
+	// number of slots - should be prime and ~1.3 x number of max expected entries
+	int m = 13;
 	int table[m];
 
 	char *key = "a";
@@ -77,27 +92,35 @@ int main(void){
 
 	print_array(table, m);
 
-	table_insert(table, m, key, value);
+	table_insert(table, m, key, 1);
 
 	print_array(table, m);
 
 	key = "b";
 
-	table_insert(table, m, key, value);
+	table_insert(table, m, key, 2);
 
 	print_array(table, m);
 
 	key = "ab";
 
-	table_insert(table, m, key, value);
+	table_insert(table, m, key, 3);
 
 	print_array(table, m);
 
-	key = "ba";
+	key = "shoop";
 
-	table_insert(table, m, key, value);
+	table_insert(table, m, key, 4);
+
+	key = "shoop";
+
+	table_insert(table, m, key, 4);
 
 	print_array(table, m);
+
+	value = table_search(table, m, key);
+
+	printf("%d", value);
 
 	return 0;
 }
