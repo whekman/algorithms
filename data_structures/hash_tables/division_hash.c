@@ -5,11 +5,9 @@
 #include <stdlib.h>
 
 // K&R 2 Hash
-// eg maps
-// a -> 97 (ascii val)
-// b -> 98
-// ab -> 3105
-// ba -> 3135
+// eg maps a -> 97 (ascii val), b -> 98, ab -> 3105, ba -> 3135
+// uses h = *s + 31*h repeatly (polynomial method, Horner's rule)
+// Apparently java.lang.String's hashCode uses this method
 unsigned int hash_KR2(char *s)
 {
     unsigned int hashval;
