@@ -164,6 +164,90 @@ struct node * tree_successor(struct node *x){
 
 }
 
+struct node * tree_delete(struct node **tree, struct node * z){
+
+	// y will be spliced out at some point
+	struct node * y;
+
+	// x points to sub-tree of z	
+	struct node * x;
+
+
+	// 1 or 0 children!
+	// splice out: the parent gets the sub-tree (possibly null)
+	if ((z->left == NULL) || (z->right == NULL)){
+
+		y = z;
+
+	// 2 children! - difficult
+	// idea: swap z with spliced out successor (aunt)
+	// so there are no orphans
+	} else {
+	
+		y = tree_successor(z);
+
+		// NOTE: the tree structure should ensure(!)
+		// in this particular case
+		// that the successor has 0/1 children
+		// special property of BST !?
+	}
+
+	// acquire pointer x to the relevant sub-tree of y
+	// if it's located left
+	if (y->left != NULL){
+
+		x = y->left;
+
+	// if it's located right or empty
+	} else {
+
+		// NOTE: y->right may be NULL
+		x = y->right;
+
+	}
+
+	// if there is a non-trivial sub-tree to take care of
+	// assign "adoption parents" = "grandpa"
+	if (x != NULL){
+
+		x->p = y->p;
+
+		// note if y == root;
+		// y->p == NULL
+		// so there is no "adoption parent"
+		// but a new root! - a new tree, in a way
+	}
+
+	// check if x-sub-tree becomes new root
+	if (y->p == NULL){
+		*tree = x;
+	
+	// otherwise "adoption parents"
+	// figure out where to put x-sub-tree:
+	// left or right of parent
+	} else if (y == y->p->left) {
+
+		// splice out y		
+		y->p->left = x;
+
+	} else {
+
+		y->p->right = x;
+
+	}
+
+	// in the case of swapping
+	// transmitting responsibilities
+	// copy key/satellite data from successor
+	// into node to be removed
+	if (y != z){
+		z->key = y->key;
+	} 
+
+	free(y);
+
+}
+
 int main(void){
 
 	// points to the root
@@ -186,10 +270,17 @@ int main(void){
 	p = tree_successor(tree);
 	p = tree_successor(p);		
 
+	printf("p points to: ");
 	if(p != NULL){
 		printf("%d\n", p->key);	
 	}
+
+	printf("deleting node pointed by p\n");
 	
+	tree_delete(&tree, p);
+
+	inorder_walk(tree,0);
+	printf("\n");
 
 
 	return 0;
