@@ -96,39 +96,101 @@ struct node * tree_search(struct node *x, int key){
 void inorder_walk(struct node *x, int indent){
 
 	if (x != NULL){
-		inorder_walk(x->left, indent + 1);
+		inorder_walk(x->right, indent + 1);
 		
 		for(int i = 0; i < indent; i++){
 			printf("\t");
 		}
 		printf("%d \n", x->key);
 
-		inorder_walk(x->right, indent + 1);
+		inorder_walk(x->left, indent + 1);
+		
 	}
 
 }
 
+struct node * tree_minimum(struct node *x){
+	if (x == NULL){
+		return x;
+	} else {
+		while(x->left != NULL){
+			x = x->left;
+		}
+		return x;
+	}
+}
 
+struct node * tree_maximum(struct node *x){
+	if (x == NULL){
+		return x;
+	} else {
+		while(x->right != NULL){
+			x = x->right;
+		}
+		return x;
+	}
+}
+
+struct node * tree_successor(struct node *x){
+	
+	if(x == NULL){
+		return NULL;
+	}
+
+	// if has right tree:
+	// successor has min key there
+
+	if(x->right != NULL){
+		return tree_minimum(x->right);
+	}
+
+	// otherwise...
+	// maybe there is a rightward ancestor up in the tree
+	// s.t. x is leftward descendant on a rightward branch
+
+	// we can find the successor by
+	// move up on this rightward branch
+	// untill we find a parent which qualifies as the successor
+
+	// move up using pointer y
+	struct node * y = x->p;
+
+	while((y != NULL) && (y->right == x)){
+		x = y;
+		y = y->p;
+	}
+
+	return y;
+
+}
 
 int main(void){
 
 	// points to the root
 	struct node *tree = NULL;
 
-    int keys[] = {8,7,2,3,5,5};
+    int keys[] = {5,8,7,2,3,1,5};
     int n = sizeof(keys) / sizeof(keys[0]);
 
     tree_from_array(&tree, keys, n);
 
 	inorder_walk(tree,0);
+	printf("\n");
 
 	struct node *p = NULL;
 	p = tree_search(tree, 3);
 
+	p = tree_minimum(tree);
+	p = tree_maximum(tree->left->left);
+
+	p = tree_successor(tree);
+	p = tree_successor(p);		
+
 	if(p != NULL){
-		printf("%d", p->key);	
+		printf("%d\n", p->key);	
 	}
 	
+
 
 	return 0;
 }
