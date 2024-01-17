@@ -16,6 +16,7 @@ void tree_insert(struct node **tree, struct node *z){
 	struct node * y = NULL;
 
 	// x walks the tree
+	// by comparing keys
 	struct node * x = *tree;
 
 	while(x != NULL){
